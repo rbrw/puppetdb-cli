@@ -1,16 +1,8 @@
-# Rust
-target
-
-# Misc files
+#*
 *.swp
+*~
 .DS_Store
-Gemfile.local
-Gemfile.lock
-
-# Beaker
-acceptance/.bundle/
-acceptance/vendor/
-acceptance/junit/
-acceptance/log/
-acceptance/hosts.cfg
-acceptance/tmp/
+/graalvm
+/graalvm-ce-*.*.*-*/
+/graalvm-ce-*.tar.gz
+/target/

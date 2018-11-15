@@ -1,52 +1,47 @@
-# puppetdb-cli
+# puppetdb-cli (experimental [GraalVM](https://www.graalvm.org/) version)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/ip998jin18j4g0yv?svg=true)](https://ci.appveyor.com/project/puppetlabs/puppetdb-cli)
-[![Build Status](https://travis-ci.org/puppetlabs/puppetdb-cli.svg)](https://travis-ci.org/puppetlabs/puppetdb-cli)
+This is an experimental branch, toying with GraalVM's native-image
+support, and right now the trivial scripts haven't been adjusted to
+support anything other than amd64.
 
-> **Note**: This repository is still under active development. Stay tuned for
-> release dates and functionality changes.
+To build it:
 
-The PuppetDB CLI project provide Puppet subcommands for querying PuppetDB data,
-via `puppet query <query>`, and PuppetDB administrative tasks, `puppet db
-<import|export|status>`. The `query` subcommand will allow you to query PuppetDB
-using either the upcoming PQL syntax of the traditional PuppetDB query syntax
-(also known as AST). The `db` subcommand is a replacement for the older
-`puppetdb <export|import>` commands with faster startup times and much
-friendlier error messages.
+    ./configure  # download graalvm
+    ./compile    # compile puppet-db
+
+To try it, first make sure you have PuppetDB up and running, and then:
+
+    ./puppet db --version
+    ./puppet db status --urls http://localhost:8080
+    ./puppet db export --urls http://localhost:8080 export.gz
+    ./puppet db import --urls http://localhost:8080 export.gz
+
+The same code should also work fine via the normal JVM, and as a
+demonstration, the included `./puppet-lein` helper does just that via
+`lein trampoline run`:
+
+    ./puppet-lein db --version
+    ./puppet-lein db status --urls http://localhost:8080
+    ./puppet-lein db export --urls http://localhost:8080 export.gz
+    ./puppet-lein db import --urls http://localhost:8080 export.gz
+
+Note that while the current code does support SSL, it can't yet handle
+unknown certificates.
+
+At the moment, the only code that's likely to be interesting is in
+src/puppetlabs/puppetdb/tool/db.clj, and it's notably more limited
+than the existing puppetdb-cli tool.
+
+You can also play around with the downloaded graalvm using the
+included `graal-env` helper like this:
+
+    ./graal-env native-image --help
 
 ## Compatibility
 
 This CLI is compatible with
 [PuppetDB 4.0.0](https://docs.puppetlabs.com/puppetdb/4.0/release_notes.html#section)
 and greater.
-
-## Installation
-
-Please see
-[the PuppetDB documentation](https://docs.puppet.com/puppetdb/latest/pdb_client_tools.html)
-for instructions on how to install the `puppet-client-tools` package.
-
-## Installation from source
-
-Using `rustc` and `cargo` (stable, beta, or nightly):
-
-```bash
-
-  $ export PATH=./target/debug:$PATH
-  $ cargo build
-  
-```
-
-When building on OSX or Windows you will also need to install openssl and use
-that for building the PuppetDB CLI. For OSX users the simplest way to do this is
-using Homebrew and running the following commands before the `cargo build`:
-
-```bash
-
-  $ export OPENSSL_LIB_DIR=$(brew --prefix)/lib
-  $ export OPENSSL_INCLUDE_DIR=$(brew --prefix)/include
-
-```
 
 ## Usage
 

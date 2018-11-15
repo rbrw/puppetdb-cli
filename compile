@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+top="$(pwd)"
+
+lein uberjar
+test -f target/uberjar/*-standalone.jar  # Make sure there's only one
+
+trap './graal-env native-image --server-shutdown' EXIT
+
+./graal-env \
+    native-image \
+    -H:ReflectionConfigurationFiles=graal-reflection.json \
+    -Dorg.apache.commons.logging.Log="$(pwd)/commons-logging.properties" \
+    --report-unsupported-elements-at-runtime \
+    --enable-http \
+    --enable-https \
+    --enable-url-protocols=http,https \
+    -H:IncludeResources="META-INF/maven/puppetdb/puppetdb/pom.properties" \
+    -cp target/uberjar/*-standalone.jar \
+    puppetlabs.puppetdb.tool.db
+
+mkdir -p target/bin
+mv puppetlabs.puppetdb.tool.db target/bin/puppet-db

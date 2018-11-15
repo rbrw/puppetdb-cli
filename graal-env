@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -ueo pipefail
+script_home="$(cd "$(dirname "$0")" && pwd)"
+export PATH="$script_home/graalvm/bin:$PATH"
+exec "$@"

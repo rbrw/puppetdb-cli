@@ -60,14 +60,13 @@ Overrides the path for the RBAC token (PE only).
 
 =head1 ACTIONS
 
-  $ puppet-db export [options]
-      The export action will export a PuppetDB archive from PuppetDB. The
-      default location of this archive will be './pdb-export.tgz' relative to
-      wherever the command was run from. You can specify a different location to
-      export as an optional argument. Additionally you can specify what level of
-      anonymization you want for your archive using the '--anonymization <str>'
-      flag, for more information about PuppetDB archive anonymization, consult
-      the documentation at:
+  $ puppet-db [options] export [--anon=<profile>] [--] [path]
+
+      Exports a PuppetDB archive from PuppetDB.  Writes the database
+      to standard output by default, or to the specified 'path'.  An
+      anonymization profile may be specified by '--anon', and
+      additional information about archive anonymization may be found
+      here:
       [http://docs.puppetlabs.com/puppetdb/master/anonymization.html]
 
   $ puppet-db import <path>

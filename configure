@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+ver=1.0.0-rc9
+
+top="$(pwd)"
+
+if ! test -f graalvm-"$ver"/bin/native-image; then
+    rm -rf graalvm-"$ver"
+    if ! test -e graalvm-ce-"$ver"-linux-amd64.tar.gz; then
+        curl -LO https://github.com/oracle/graal/releases/download/vm-"$ver"/graalvm-ce-"$ver"-linux-amd64.tar.gz
+    fi
+    sha256sum -c graalvm-ce-"$ver"-linux-amd64.tar.gz.sha256sum
+    tar xf graalvm-ce-"$ver"-linux-amd64.tar.gz
+    ln -sf graalvm-ce-"$ver" graalvm
+fi

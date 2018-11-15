@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+script_home="$(cd "$(dirname "$0")" && pwd)"
+
+usage () {
+    echo "Usage: puppet [db | query] ..."
+}
+
+if ! test "$#" -ge 1; then
+    usage 1>&2
+    exit 2
+fi
+
+cmd="$1"
+shift
+
+case "$cmd" in
+    db)
+        # The java.library.path is needed for the SSL libs (at least)
+        exec target/bin/puppet-"$cmd" \
+             -Djava.library.path="$script_home/graalvm/jre/lib/amd64" \
+             "$@"
+        ;;
+    query)
+        echo "puppet: query command not yet supported" 1>&2
+        exit 2
+        ;;
+    *)
+        usage 1>&2
+        exit 2
+        ;;
+esac

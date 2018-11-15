@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+
+set -e
+
+usage () {
+    echo "Usage: puppet [db | query] ..."
+}
+
+if ! test "$#" -ge 1; then
+    usage 1>&2
+    exit 2
+fi
+
+cmd="$1"
+shift
+
+case "$cmd" in
+    db)
+        exec lein trampoline run -m "puppetlabs.puppetdb.tool.$cmd/-main" "$@"
+        ;;
+    query)
+        echo "puppet: query command not yet supported" 1>&2
+        exit 2
+        ;;
+    *)
+        usage 1>&2
+        exit 2
+        ;;
+esac
